@@ -22,7 +22,7 @@ begin
   # in a run_list (and should only be included by this recipe).
   include_recipe "tmux::_#{node['tmux']['install_method']}"
 rescue Chef::Exceptions::RecipeNotFound
-  Chef::Application.fatal! "'#{node['tmux']['install_method']}' is not a valid installation method for the tmux cookbook!"
+  raise Chef::Exceptions::RecipeNotFound, "'#{node['tmux']['install_method']}' is not a valid installation method for the #{cookbook_name} cookbook!"
 end
 
 template '/etc/tmux.conf' do
@@ -31,8 +31,8 @@ template '/etc/tmux.conf' do
   group  'root'
   mode   '0644'
   variables(
-    :server_opts  => node['tmux']['server_opts'].to_hash,
-    :session_opts => node['tmux']['session_opts'].to_hash,
-    :window_opts  => node['tmux']['window_opts'].to_hash
+    server_opts:  node['tmux']['server_opts'].to_hash,
+    session_opts: node['tmux']['session_opts'].to_hash,
+    window_opts:  node['tmux']['window_opts'].to_hash
   )
 end

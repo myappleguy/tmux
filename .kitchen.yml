@@ -11,8 +11,11 @@ platforms:
   - name: ubuntu-12.04
     run_list:
       - recipe[apt]
-  - name: centos-5.9
-  - name: centos-6.4
+  - name: ubuntu-14.04
+    run_list:
+      - recipe[apt]
+  - name: centos-5.10
+  - name: centos-6.5
 
 suites:
   - name: package
@@ -21,6 +24,9 @@ suites:
     attributes:
       tmux:
         install_method: package
+    excludes:
+      - centos-6.5
+      - centos-5.10
   - name: source
     run_list:
       - recipe[tmux::default]

@@ -2,7 +2,7 @@ tmux Cookbook
 =============
 [![Build Status](https://secure.travis-ci.org/stevendanna/tmux.png?branch=master)](http://travis-ci.org/stevendanna/tmux)
 
-Installs tmux, a terminal multiplexer.
+Installs [tmux](http://tmux.sourceforge.net/), a terminal multiplexer.
 
 
 Requirements
@@ -22,9 +22,11 @@ Usage
 -----
 Use the recipe for the installation method you want to use, or set the attribute on the node to install from that recipe and use the default recipe. The default recipe also manages `/etc/tmux.conf`.
 
-On RHEL family, `node['tmux']['install_method']` is set to source by default. To install from package, the `yum::epel` recipe is required to get the tmux package, and the attribte would need to be set explicitly.
+On RHEL family, `node['tmux']['install_method']` is set to source by default. To install from package, the `yum::epel` recipe is required to get the tmux package, and the attribute would need to be set explicitly.
 
 When installing from source, an install prefix can be set with the `configure_options` attribute. For example:
+
+tmux versions 1.7 and above require [libevent](http://libevent.org/) 2.0+.
 
 ```ruby
 default['tmux']['configure_options'] << "--prefix=/opt/tmux"

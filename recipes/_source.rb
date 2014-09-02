@@ -18,20 +18,30 @@
 # limitations under the License.
 #
 
-packages = case node['platform_family']
-           when 'rhel'
-             %w(libevent-devel ncurses-devel gcc make)
-           else
-             %w(libevent-dev libncurses5-dev gcc make)
-           end
+# if centos/RHEL 7 then install libevent-devel 2.0 package
+
+# install prerequisite packages
+# install libevent
+#
+packages = value_for_platform_family(
+  ['rhel'] => %w(ncurses-devel gcc make),
+  'default' => %w(libevent-dev libncurses5-dev gcc make)
+)
 
 packages.each do |name|
   package name
 end
 
+if node['tmux']['libevent']['install_method'] == :package
+  package 'libevent-devel'
+else
+  log '======== Installing libevent from source ========='
+  raise 'Installing libevent from source is not implemented!'
+end
+
 tar_name = "tmux-#{node['tmux']['version']}"
 remote_file "#{Chef::Config['file_cache_path']}/#{tar_name}.tar.gz" do
-  source   "http://downloads.sourceforge.net/tmux/#{tar_name}.tar.gz"
+  source node['tmux']['source_url']
   checksum node['tmux']['checksum']
   notifies :run, 'bash[install_tmux]', :immediately
 end
@@ -45,6 +55,6 @@ bash 'install_tmux' do
       ./configure #{node['tmux']['configure_options'].join(' ')}
       make
       make install
-    EOH
+  EOH
   action :nothing
 end

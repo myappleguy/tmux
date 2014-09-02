@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 #
 
+extend Tmux::Helper
+
 default['tmux']['install_method'] = case node['platform_family']
                                     when 'rhel'
                                       'source'
@@ -23,8 +25,17 @@ default['tmux']['install_method'] = case node['platform_family']
                                       'package'
                                     end
 
-default['tmux']['version'] = '1.8'
-default['tmux']['checksum'] = 'f265401ca890f8223e09149fcea5abcd6dfe75d597ab106e172b01e9d0c9cd44'
+default['tmux']['version'] = '1.9a'
+default['tmux']['source_url'] = "http://downloads.sourceforge.net/tmux/tmux-#{node['tmux']['version']}.tar.gz"
+default['tmux']['checksum'] = ''
+# {
+# '1.6' => '',
+# '1.7' => '',
+# '1.8' => '',
+# '1.9a' => ''
+# }
+
+default['tmux']['libevent']['install_method'] = libevent_install_method
 
 default['tmux']['configure_options'] = []
 
