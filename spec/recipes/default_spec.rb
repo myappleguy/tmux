@@ -1,7 +1,7 @@
 describe 'tmux::default' do
   context 'when the installation method is source' do
     let(:chef_run) do
-      ChefSpec::Runner.new do |node|
+      ChefSpec::Runner.new(platform: 'centos', version: '6.5') do |node|
         node.set['tmux']['install_method'] = 'source'
       end.converge(described_recipe)
     end
@@ -17,7 +17,7 @@ describe 'tmux::default' do
 
   context 'when the installation method is package' do
     let(:chef_run) do
-      ChefSpec::Runner.new do |node|
+      ChefSpec::Runner.new(platform: 'centos', version: '6.5') do |node|
         node.set['tmux']['install_method'] = 'package'
       end.converge(described_recipe)
     end

@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'rake',       '>= 10.3'
 gem 'berkshelf',  '~> 3.0'
 gem 'chefspec',   '~> 4.0'
 gem 'foodcritic', '~> 4.0'

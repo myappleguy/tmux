@@ -23,24 +23,23 @@
 # install prerequisite packages
 # install libevent
 #
+
+FILE_CACHE = Chef::Config['file_cache_path']
+
 packages = value_for_platform_family(
-  ['rhel'] => %w(ncurses-devel gcc make),
-  'default' => %w(libevent-dev libncurses5-dev gcc make)
+  %w(rhel fedora) => %w(ncurses-devel gcc make),
+  'debian' => %w(libncurses5-dev gcc make)
 )
 
 packages.each do |name|
   package name
 end
 
-if node['tmux']['libevent']['install_method'] == :package
-  package 'libevent-devel'
-else
-  log '======== Installing libevent from source ========='
-  raise 'Installing libevent from source is not implemented!'
-end
+include_recipe "#{cookbook_name}::_libevent"
 
 tar_name = "tmux-#{node['tmux']['version']}"
-remote_file "#{Chef::Config['file_cache_path']}/#{tar_name}.tar.gz" do
+
+remote_file "#{FILE_CACHE}/#{tar_name}.tar.gz" do
   source node['tmux']['source_url']
   checksum node['tmux']['checksum']
   notifies :run, 'bash[install_tmux]', :immediately
@@ -48,7 +47,7 @@ end
 
 bash 'install_tmux' do
   user 'root'
-  cwd  Chef::Config['file_cache_path']
+  cwd  FILE_CACHE
   code <<-EOH
       tar -zxf #{tar_name}.tar.gz
       cd #{tar_name}

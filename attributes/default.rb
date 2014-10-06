@@ -18,24 +18,29 @@
 
 extend Tmux::Helper
 
-default['tmux']['install_method'] = case node['platform_family']
-                                    when 'rhel'
-                                      'source'
-                                    else
-                                      'package'
-                                    end
+default['tmux']['install_method'] = value_for_platform_family(
+  'rhel' => 'source',
+  'default' => 'package'
+)
 
 default['tmux']['version'] = '1.9a'
 default['tmux']['source_url'] = "http://downloads.sourceforge.net/tmux/tmux-#{node['tmux']['version']}.tar.gz"
-default['tmux']['checksum'] = ''
-# {
-# '1.6' => '',
-# '1.7' => '',
-# '1.8' => '',
-# '1.9a' => ''
-# }
 
+# use default checksum for tmux 1.9a
+default['tmux']['checksum'] = 'c5e3b22b901cf109b20dab54a4a651f0471abd1f79f6039d79b250d21c2733f5'
+
+# use the helper method defined in this cookbook's libraries/helper
 default['tmux']['libevent']['install_method'] = libevent_install_method
+default['tmux']['libevent']['package'] = value_for_platform_family(
+  'rhel' => 'libevent-devel',
+  'debian' => 'libevent-dev'
+)
+
+libevent_tar_name = 'libevent-2.0.21-stable'
+default['tmux']['libevent']['tar_name'] = libevent_tar_name
+default['tmux']['libevent']['source_url'] = "https://github.com/downloads/libevent/libevent/#{libevent_tar_name}.tar.gz"
+# use default checksum for libevent-2.0.21-stable
+default['tmux']['libevent']['checksum'] = '22a530a8a5ba1cb9c080cba033206b17dacd21437762155c6d30ee6469f574f5'
 
 default['tmux']['configure_options'] = []
 
